@@ -1,0 +1,30 @@
+name: Release Docker Image
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+jobs:
+  release-docker-image:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "GIT: Checkout Action Version"
+        uses: actions/checkout@v3
+
+      - name: "DOCKER: Authentication with Docker Hub"
+        uses: docker/login-action@v2
+        with:
+          username: ${{ vars.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: "DOCKER: Build, Tag and Push Image to Docker Hub"
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          build-args: |
+            PARALLELISM=8
+          tags: ${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.APP_NAME}}:main

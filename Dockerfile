@@ -42,11 +42,11 @@ RUN set -e; \
     fi
 
 # golang stuff
-RUN curl https://dl.google.com/go/go1.14.2.linux-$(dpkg --print-architecture).tar.gz | tar -C /opt -xz
+RUN curl https://dl.google.com/go/go1.16.15.linux-$(dpkg --print-architecture).tar.gz | tar -C /opt -xz
 ENV GOPATH=/opt/gopath
 RUN mkdir ${GOPATH}
 ENV PATH=${PATH}:/opt/go/bin:${GOPATH}/bin
-RUN go get github.com/golang/protobuf/protoc-gen-go@6c66de7
+RUN go get github.com/golang/protobuf/protoc-gen-go
 
 ## pip3 contains fresher versions of packages than apt
 RUN pip3 install --no-cache-dir cmake ninja
